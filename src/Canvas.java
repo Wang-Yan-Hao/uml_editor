@@ -65,6 +65,11 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
         repaint();
     }
 
+    public void replaceShape(Shape oldShape, Shape newShape) {
+        shapes.remove(oldShape);
+        shapes.add(newShape);
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
