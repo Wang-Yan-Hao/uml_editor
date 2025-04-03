@@ -1,0 +1,64 @@
+# Compiled class files
+*.class
+
+# IDE related files
+.settings/           # Eclipse
+.metadata/           # Eclipse
+.project             # Eclipse
+.classpath           # Eclipse
+.idea/                # IntelliJ IDEA
+*.iml                 # IntelliJ IDEA
+nbproject/           # NetBeans
+build/               # NetBeans or Gradle
+dist/                # NetBeans
+*.jpr                # JBuilder
+*.iws                # IntelliJ
+*.ipr                # IntelliJ
+*.iwr                # IntelliJ
+
+# Maven
+target/
+pom.xml.tag
+
+# Gradle
+.gradle/
+build/
+bin/
+out/
+
+# Archives (e.g. WAR, EAR, JAR)
+*.war
+*.ear
+*.jar
+*.zip
+*.gz
+
+# Log files
+*.log
+*.txt
+
+# OS generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+~$*
+desktop.ini
+
+# Temporary files
+*~
+\#*
+.*.sw[mnpcod]
+*.bak
+*.tmp
+/temp/
+/tmp/
+
+# Eclipse Code Formatter profile
+eclipse-code-formatter.xml
+
+# Mac
+.AppleDouble
+._*
+.LSOverride
+
+# End of list
