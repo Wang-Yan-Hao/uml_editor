@@ -9,16 +9,19 @@ import javax.imageio.ImageIO;
 import java.io.IOException;
 
 public class Canvas extends JPanel implements MouseListener, MouseMotionListener {
-    private LinkedList<Shape> shapes = new LinkedList<>();
+    private LinkedList<Shape> shapes = new LinkedList<>(); // 現在 canva 上面有的 shape
     private LinkedList<Link> links = new LinkedList<>(); // To store links
-    private Shape selectedShape;
+
+    private LinkedList<Shape> apple = new LinkedList<>();
+
+    private Shape selectedShape; // 之前選過得 shape
     private Shape startLinkShape; // Temporary start shape for drawing links
     private Shape endLinkShape;   // Temporary end shape for drawing links
     private Point dragStart;
     private int dragOffsetX, dragOffsetY;
     private Rectangle currentRect;
     private Ellipse2D.Double currentOval;
-    private String currentMode = "select"; // Default mode
+    private String currentMode = "select"; // 不同的模式
     private BufferedImage associationImage;
     private BufferedImage generalizationImage;
     private BufferedImage compositionImage;
@@ -36,6 +39,7 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error loading link images!", "Error", JOptionPane.ERROR_MESSAGE);
         }
+    
     }
     public String getCurrentMode() {
         return currentMode;
@@ -85,68 +89,81 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
             link.draw(g2d);
         }
 
-        if ((currentMode.equals("association") || currentMode.equals("generalization") || currentMode.equals("composition")) && startLinkShape != null) {
-            g2d.setColor(Color.BLACK);
-            g2d.drawLine((int) startLinkShape.getBounds().getCenterX(), (int) startLinkShape.getBounds().getCenterY(), (int) dragStart.x, (int) dragStart.y);
+        // if ((currentMode.equals("association") || currentMode.equals("generalization") || currentMode.equals("composition")) && startLinkShape != null) {
+        //     g2d.setColor(Color.BLACK);
+        //     g2d.drawLine((int) startLinkShape.getBounds().getCenterX(), (int) startLinkShape.getBounds().getCenterY(), (int) dragStart.x, (int) dragStart.y);
+        // }
 
+        // if (currentRect != null) {
+        //     g2d.setColor(Color.BLACK);
+        //     g2d.drawRect(currentRect.x, currentRect.y, currentRect.width, currentRect.height);
+        // }
+        // if (currentOval != null) {
+        //     g2d.setColor(Color.BLACK);
+        //     g2d.drawOval((int) currentOval.x, (int) currentOval.y, (int) currentOval.width, (int) currentOval.height);
+        // }
 
-        }
-
-        if (currentRect != null) {
-            g2d.setColor(Color.BLACK);
-            g2d.drawRect(currentRect.x, currentRect.y, currentRect.width, currentRect.height);
-        }
-
-        if (currentOval != null) {
-            g2d.setColor(Color.BLACK);
-            g2d.drawOval((int) currentOval.x, (int) currentOval.y, (int) currentOval.width, (int) currentOval.height);
-        }
-
-        if (selectedShape != null) {
+        for (Shape app : apple) {
             g2d.setColor(Color.BLUE);
             g2d.setStroke(new BasicStroke(2));
-            Rectangle bounds = selectedShape.getBounds();
+            Rectangle bounds = app.getBounds();
             g2d.drawRect(bounds.x - 3, bounds.y - 3, bounds.width + 6, bounds.height + 6); // Draw selection outline
             g2d.setStroke(new BasicStroke(1));
 
             // Draw eight ports around the selected shape
             drawPorts(g2d, bounds);
         }
+
+        // if (selectedShape != null) {
+        //     g2d.setColor(Color.BLUE);
+        //     g2d.setStroke(new BasicStroke(2));
+        //     Rectangle bounds = selectedShape.getBounds();
+        //     g2d.drawRect(bounds.x - 3, bounds.y - 3, bounds.width + 6, bounds.height + 6); // Draw selection outline
+        //     g2d.setStroke(new BasicStroke(1));
+
+        //     // Draw eight ports around the selected shape
+        //     drawPorts(g2d, bounds);
+        // }
     }
 
-private void drawPorts(Graphics2D g2d, Rectangle bounds) {
-    int portSize = 6;
-    g2d.setColor(Color.BLACK);
+    private void drawPorts(Graphics2D g2d, Rectangle bounds) {
+        int portSize = 6;
+        g2d.setColor(Color.BLACK);
 
-    if (selectedShape instanceof Oval) {
-        double centerX = bounds.getCenterX();
-        double centerY = bounds.getCenterY();
-        double halfWidth = bounds.getWidth() / 2;
-        double halfHeight = bounds.getHeight() / 2;
 
-        // North
-        g2d.fillRect((int) centerX - portSize / 2, bounds.y - portSize / 2, portSize, portSize);
-        // South
-        g2d.fillRect((int) centerX - portSize / 2, bounds.y + bounds.height - portSize / 2, portSize, portSize);
-        // West
-        g2d.fillRect(bounds.x - portSize / 2, (int) centerY - portSize / 2, portSize, portSize);
-        // East
-        g2d.fillRect(bounds.x + bounds.width - portSize / 2, (int) centerY - portSize / 2, portSize, portSize);
-    } else if (selectedShape instanceof Rect) {
-        // Draw eight ports for rectangles
-        // Corners
-        g2d.fillRect(bounds.x - portSize / 2, bounds.y - portSize / 2, portSize, portSize);             // Top Left
-        g2d.fillRect(bounds.x + bounds.width - portSize / 2, bounds.y - portSize / 2, portSize, portSize);       // Top Right
-        g2d.fillRect(bounds.x - portSize / 2, bounds.y + bounds.height - portSize / 2, portSize, portSize);    // Bottom Left
-        g2d.fillRect(bounds.x + bounds.width - portSize / 2, bounds.y + bounds.height - portSize / 2, portSize, portSize); // Bottom Right
+        for (Shape app : apple) {
 
-        // Midpoints
-        g2d.fillRect(bounds.x + bounds.width / 2 - portSize / 2, bounds.y - portSize / 2, portSize, portSize);             // Top
-        g2d.fillRect(bounds.x + bounds.width / 2 - portSize / 2, bounds.y + bounds.height - portSize / 2, portSize, portSize); // Bottom
-        g2d.fillRect(bounds.x - portSize / 2, bounds.y + bounds.height / 2 - portSize / 2, portSize, portSize);             // Left
-        g2d.fillRect(bounds.x + bounds.width - portSize / 2, bounds.y + bounds.height / 2 - portSize / 2, portSize, portSize); // Right
+            if (app instanceof Oval) {
+                double centerX = bounds.getCenterX();
+                double centerY = bounds.getCenterY();
+                double halfWidth = bounds.getWidth() / 2;
+                double halfHeight = bounds.getHeight() / 2;
+
+                // North
+                g2d.fillRect((int) centerX - portSize / 2, bounds.y - portSize / 2, portSize, portSize);
+                // South
+                g2d.fillRect((int) centerX - portSize / 2, bounds.y + bounds.height - portSize / 2, portSize, portSize);
+                // West
+                g2d.fillRect(bounds.x - portSize / 2, (int) centerY - portSize / 2, portSize, portSize);
+                // East
+                g2d.fillRect(bounds.x + bounds.width - portSize / 2, (int) centerY - portSize / 2, portSize, portSize);
+            } else if (app instanceof Rect) {
+                // Draw eight ports for rectangles
+                // Corners
+                g2d.fillRect(bounds.x - portSize / 2, bounds.y - portSize / 2, portSize, portSize);             // Top Left
+                g2d.fillRect(bounds.x + bounds.width - portSize / 2, bounds.y - portSize / 2, portSize, portSize);       // Top Right
+                g2d.fillRect(bounds.x - portSize / 2, bounds.y + bounds.height - portSize / 2, portSize, portSize);    // Bottom Left
+                g2d.fillRect(bounds.x + bounds.width - portSize / 2, bounds.y + bounds.height - portSize / 2, portSize, portSize); // Bottom Right
+
+                // Midpoints
+                g2d.fillRect(bounds.x + bounds.width / 2 - portSize / 2, bounds.y - portSize / 2, portSize, portSize);             // Top
+                g2d.fillRect(bounds.x + bounds.width / 2 - portSize / 2, bounds.y + bounds.height - portSize / 2, portSize, portSize); // Bottom
+                g2d.fillRect(bounds.x - portSize / 2, bounds.y + bounds.height / 2 - portSize / 2, portSize, portSize);             // Left
+                g2d.fillRect(bounds.x + bounds.width - portSize / 2, bounds.y + bounds.height / 2 - portSize / 2, portSize, portSize); // Right
+            }
+
+        }
     }
-}
 
     private Shape findShapeAt(Point p) {
         for (int i = shapes.size() - 1; i >= 0; i--) {
@@ -165,12 +182,14 @@ private void drawPorts(Graphics2D g2d, Rectangle bounds) {
                 selectedShape = null;
             }
             selectedShape = foundShape;
+            apple.add(selectedShape);
             // Calculate offset for dragging
             Rectangle bounds = selectedShape.getBounds();
             dragOffsetX = p.x - bounds.x;
             dragOffsetY = p.y - bounds.y;
         } else {
             selectedShape = null;
+            apple.clear();
         }
         repaint();
     }
@@ -211,16 +230,14 @@ public void mouseDragged(MouseEvent e) {
             oval.y += deltaY - dragOffsetY;
         }
 
-        Rectangle selectedBounds = selectedShape.getBounds();
+        // Rectangle selectedBounds = selectedShape.getBounds();
 
         // Update links connected to this shape
         for (Link link : links) {
-            if (link.getStartShape() == selectedShape) {
-                link.setStartPoint(getClosestPort(selectedBounds, link.getEndPointOnOtherShape()));
-            }
-            if (link.getEndShape() == selectedShape) {
-                link.setEndPoint(getClosestPort(selectedBounds, link.getStartPointOnOtherShape()));
-            }
+            Shape startShape = link.getStartShape();
+            link.setStartPoint(getClosestPort(startShape, startShape.getBounds(), link.getEndPointOnOtherShape()));
+            Shape endShape = link.getEndShape();
+            link.setEndPoint(getClosestPort(endShape, endShape.getBounds(), link.getStartPointOnOtherShape()));
         }
 
         dragOffsetX = (int) deltaX;
@@ -275,8 +292,8 @@ public void mouseDragged(MouseEvent e) {
                 }
 
                 if (link != null) {
-                    link.setStartPoint(getClosestPort(startLinkShape.getBounds(), p));
-                    link.setEndPoint(getClosestPort(endLinkShape.getBounds(), p));
+                    link.setStartPoint(getClosestPort(startLinkShape, startLinkShape.getBounds(), p));
+                    link.setEndPoint(getClosestPort(endLinkShape, endLinkShape.getBounds(), p));
                     links.add(link);
                 }
             }
@@ -286,8 +303,8 @@ public void mouseDragged(MouseEvent e) {
         }
         dragStart = null;
     }
-    
-private Point2D.Double getClosestPort(Rectangle bounds, Point p) {
+
+private Point2D.Double getClosestPort(Shape shape, Rectangle bounds, Point p) {
     double centerX = bounds.getCenterX();
     double centerY = bounds.getCenterY();
     double dx = p.x - centerX;
@@ -297,7 +314,7 @@ private Point2D.Double getClosestPort(Rectangle bounds, Point p) {
     double x = 0, y = 0;
     double minDistanceSq = Double.MAX_VALUE;
 
-    if (selectedShape instanceof Oval) {
+    if (shape instanceof Oval) {
         // Find closest of the four cardinal direction ports for ovals
         double halfWidth = bounds.getWidth() / 2;
         double halfHeight = bounds.getHeight() / 2;
