@@ -13,8 +13,23 @@ public class EditMenu extends JMenuBar {
         this.canvas = canvas;
         JMenu editMenu = new JMenu("Edit");
 
-        ungroupMenuItem = new JMenuItem("Ungroup");
+
         groupMenuItem = new JMenuItem("Group");
+        groupMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                groupAppleShapes(); // Call the correct method
+            }
+        });
+
+        ungroupMenuItem = new JMenuItem("Ungroup");
+        ungroupMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ungroupSelectedShape(); // Call the ungroupSelectedShape method
+            }
+        });
+
         labelMenuItem = new JMenuItem("Label");
 
         labelMenuItem.addActionListener(new ActionListener() {
@@ -98,6 +113,22 @@ public class EditMenu extends JMenuBar {
         editMenu.add(labelMenuItem);
 
         add(editMenu);
+    }
+
+
+    private void groupAppleShapes() {
+        canvas.combineAppleShapes();
+        updateMenuItemsState();
+    }
+
+    private void ungroupSelectedShape() {
+        Shape selectedShape = canvas.getSelectedShape();
+        if (selectedShape instanceof GroupShape) {
+            canvas.uncombineShape((GroupShape) selectedShape);
+        } else {
+            JOptionPane.showMessageDialog(canvas, "Select a grouped shape to ungroup.");
+        }
+        updateMenuItemsState();
     }
 
     public void updateMenuItemsState() {

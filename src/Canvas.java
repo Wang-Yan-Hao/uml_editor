@@ -41,6 +41,33 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
         }
     
     }
+
+    public void combineAppleShapes() {
+        if (apple.size() < 2) {
+            JOptionPane.showMessageDialog(this, "Select at least two shapes to combine.");
+            return;
+        }
+
+        GroupShape combinedShape = new GroupShape(new LinkedList<>(apple));
+        shapes.removeAll(apple);
+        shapes.add(combinedShape);
+
+        apple.clear();
+        repaint();
+    }
+
+    public void uncombineShape(GroupShape combinedShape) {
+        if (combinedShape == null) {
+            JOptionPane.showMessageDialog(this, "Select a combined shape to uncombine.");
+            return;
+        }
+
+        shapes.remove(combinedShape);
+        shapes.addAll(combinedShape.getGroupedShapes());
+
+        repaint();
+    }
+
     public String getCurrentMode() {
         return currentMode;
     }
@@ -89,20 +116,6 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
             link.draw(g2d);
         }
 
-        // if ((currentMode.equals("association") || currentMode.equals("generalization") || currentMode.equals("composition")) && startLinkShape != null) {
-        //     g2d.setColor(Color.BLACK);
-        //     g2d.drawLine((int) startLinkShape.getBounds().getCenterX(), (int) startLinkShape.getBounds().getCenterY(), (int) dragStart.x, (int) dragStart.y);
-        // }
-
-        // if (currentRect != null) {
-        //     g2d.setColor(Color.BLACK);
-        //     g2d.drawRect(currentRect.x, currentRect.y, currentRect.width, currentRect.height);
-        // }
-        // if (currentOval != null) {
-        //     g2d.setColor(Color.BLACK);
-        //     g2d.drawOval((int) currentOval.x, (int) currentOval.y, (int) currentOval.width, (int) currentOval.height);
-        // }
-
         for (Shape app : apple) {
             g2d.setColor(Color.BLUE);
             g2d.setStroke(new BasicStroke(2));
@@ -113,23 +126,11 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
             // Draw eight ports around the selected shape
             drawPorts(g2d, bounds);
         }
-
-        // if (selectedShape != null) {
-        //     g2d.setColor(Color.BLUE);
-        //     g2d.setStroke(new BasicStroke(2));
-        //     Rectangle bounds = selectedShape.getBounds();
-        //     g2d.drawRect(bounds.x - 3, bounds.y - 3, bounds.width + 6, bounds.height + 6); // Draw selection outline
-        //     g2d.setStroke(new BasicStroke(1));
-
-        //     // Draw eight ports around the selected shape
-        //     drawPorts(g2d, bounds);
-        // }
     }
 
     private void drawPorts(Graphics2D g2d, Rectangle bounds) {
         int portSize = 6;
         g2d.setColor(Color.BLACK);
-
 
         for (Shape app : apple) {
 
@@ -216,28 +217,23 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 public void mouseDragged(MouseEvent e) {
     Point p = e.getPoint();
     if (currentMode.equals("select") && selectedShape != null) {
+        // Calculate deltaX and deltaY based on the shape's bounds
+        double deltaX = p.x - selectedShape.getBounds().x;
+        double deltaY = p.y - selectedShape.getBounds().y;
+
         // Move the selected shape
-        double deltaX = p.x - (selectedShape instanceof Rect ? ((Rect) selectedShape).x : ((Oval) selectedShape).x);
-        double deltaY = p.y - (selectedShape instanceof Rect ? ((Rect) selectedShape).y : ((Oval) selectedShape).y);
-
-        if (selectedShape instanceof Rect) {
-            Rect rect = (Rect) selectedShape;
-            rect.x += deltaX - dragOffsetX;
-            rect.y += deltaY - dragOffsetY;
-        } else if (selectedShape instanceof Oval) {
-            Oval oval = (Oval) selectedShape;
-            oval.x += deltaX - dragOffsetX;
-            oval.y += deltaY - dragOffsetY;
-        }
-
-        // Rectangle selectedBounds = selectedShape.getBounds();
+        selectedShape.move((int) (deltaX - dragOffsetX), (int) (deltaY - dragOffsetY));
 
         // Update links connected to this shape
         for (Link link : links) {
             Shape startShape = link.getStartShape();
-            link.setStartPoint(getClosestPort(startShape, startShape.getBounds(), link.getEndPointOnOtherShape()));
+            if (startShape != null) {
+                link.setStartPoint(getClosestPort(startShape, startShape.getBounds(), link.getEndPointOnOtherShape()));
+            }
             Shape endShape = link.getEndShape();
-            link.setEndPoint(getClosestPort(endShape, endShape.getBounds(), link.getStartPointOnOtherShape()));
+            if (endShape != null) {
+                link.setEndPoint(getClosestPort(endShape, endShape.getBounds(), link.getStartPointOnOtherShape()));
+            }
         }
 
         dragOffsetX = (int) deltaX;
