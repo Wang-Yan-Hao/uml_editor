@@ -3,6 +3,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import shape.Shape;
+import shape.Rect;
+import shape.Oval;
+import shape.GroupShape;
+
 public class EditMenu extends JMenuBar {
     private Canvas canvas;
     private JMenuItem ungroupMenuItem;

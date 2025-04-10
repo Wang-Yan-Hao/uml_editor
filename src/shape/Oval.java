@@ -1,5 +1,7 @@
 // Oval.java
+package shape;
 import java.awt.*;
+import shape.Shape;
 
 public class Oval extends Shape {
     public Oval(int x, int y, int width, int height) {

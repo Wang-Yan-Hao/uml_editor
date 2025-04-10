@@ -10,20 +10,19 @@ public class WorkflowEditor extends JFrame {
     public WorkflowEditor() {
         setTitle("Workflow Editor");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600);
+        setSize(1600, 1200);
         setLocationRelativeTo(null);
 
         canvas = new Canvas(); // Initialize Canvas first
         toolBar = new ToolBar(canvas); // Initialize toolBar, passing the Canvas
-
         editMenu = new EditMenu(canvas);
         setJMenuBar(editMenu);
 
         add(canvas, BorderLayout.CENTER); // Canvas in the center
         add(toolBar, BorderLayout.WEST);  // Toolbar on the left
 
-        // Set a preferred size for the toolbar to control its width
-        toolBar.setPreferredSize(new Dimension(150, getHeight())); // Adjust width as needed
+        // 設定 toolBar 大小
+        toolBar.setPreferredSize(new Dimension(150, getHeight()));
 
         setVisible(true);
     }

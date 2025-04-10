@@ -1,8 +1,13 @@
 // Link.java
+package link;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+
+import shape.Shape;
+import shape.Rect;
+import shape.Oval;
 
 public abstract class Link {
     protected Shape startShape;

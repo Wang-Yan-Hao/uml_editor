@@ -4,10 +4,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import shape.Shape;
+import shape.Rect;
+import shape.Oval;
+
 public class ToolBar extends JPanel {
     private Canvas canvas;
     private JButton selectButton, rectButton, ovalButton, associationButton, generalizationButton, compositionButton;
-    private JButton activeButton; // To track the currently active button
+    private JButton activeButton; // 現在正在按下的 button
 
     public ToolBar(Canvas canvas) {
         this.canvas = canvas;
@@ -34,20 +38,21 @@ public class ToolBar extends JPanel {
 
     private JButton createButton(String text, String mode) {
         JButton button = new JButton(text);
-        button.addActionListener(new ActionListener() {
+        button.addActionListener(new ActionListener() { // 按按鈕的事件
             @Override
             public void actionPerformed(ActionEvent e) {
                 canvas.setCurrentMode(mode);
-                activeButton = button; // Update the active button
-                updateButtonColors(button); // Update button colors
+                activeButton = button;
+                updateButtonColors(button);
             }
         });
         return button;
     }
 
     private void updateButtonColors(JButton selectedButton) {
-        Color activeColor = Color.CYAN; // Color for the active button
-        Color defaultColor = UIManager.getColor("Button.background"); // Default button color
+        // 預設 color
+        Color activeColor = Color.CYAN;
+        Color defaultColor = UIManager.getColor("Button.background");
 
         selectButton.setBackground(defaultColor);
         rectButton.setBackground(defaultColor);

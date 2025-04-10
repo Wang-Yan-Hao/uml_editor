@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import shape.Shape;
+
 public class LabelStyleDialog extends JDialog {
     private Shape shape; // Accept a Shape object
     private JTextField labelTextField;

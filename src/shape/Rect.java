@@ -1,5 +1,8 @@
 // Rect.java
+package shape;
 import java.awt.*;
+import shape.Shape;
+
 
 public class Rect extends Shape {
     public Rect(int x, int y, int width, int height) {

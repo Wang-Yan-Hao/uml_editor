@@ -1,14 +1,16 @@
 // Shape.java
+package shape;
 import java.awt.*;
 
 public abstract class Shape {
-    protected int x;
-    protected int y;
-    protected int width;
-    protected int height;
-    protected Color backgroundColor;
-    protected String name;         // Text label for the shape
-    protected int fontSize;      // Font size for the label
+    public int x; // 左上角點的 x and y
+    public int y;
+    public int width;
+    public int height;
+
+    public Color backgroundColor;
+    public String name;
+    public int fontSize;
 
     public Shape(int x, int y, int width, int height, Color backgroundColor, String name, int fontSize) {
         this.x = x;
@@ -22,15 +24,18 @@ public abstract class Shape {
 
     public abstract void draw(Graphics2D g2d);
 
+    // 移動就是把 x y 設定
     public void move(int dx, int dy) {
         this.x += dx;
         this.y += dy;
     }
 
+    // 看有沒有在圖形裡面
     public boolean contains(int px, int py) {
         return px >= x && px <= x + width && py >= y && py <= y + height;
     }
 
+    // 邊緣就是正方形 回傳一個正方形
     public Rectangle getBounds() {
         return new Rectangle(x, y, width, height);
     }
@@ -60,8 +65,8 @@ public abstract class Shape {
         this.fontSize = fontSize;
     }
 
-    // Helper method to draw text centered in the shape
-    protected void drawCenteredText(Graphics2D g2d, String text, Rectangle bounds, int fontSize) {
+    // 在圖形中間寫字
+    public void drawCenteredText(Graphics2D g2d, String text, Rectangle bounds, int fontSize) {
         Font font = new Font("Arial", Font.PLAIN, fontSize);
         g2d.setFont(font);
         FontMetrics metrics = g2d.getFontMetrics(font);
