@@ -1,3 +1,2 @@
 #!/bin/bash
-javac labels/*.java  *.java shape/*.java
-
+javac *.java shape/*.java

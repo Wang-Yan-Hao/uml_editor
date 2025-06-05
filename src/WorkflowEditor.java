@@ -3,11 +3,14 @@ import javax.swing.*;
 import java.awt.*;
 
 public class WorkflowEditor extends JFrame {
+    // Singelton design pattern
+    private static WorkflowEditor instance;
+
     private Canvas canvas;
     private ToolBar toolBar;
     private EditMenu editMenu;
 
-    public WorkflowEditor() {
+    private WorkflowEditor() {
         setTitle("Workflow Editor");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1600, 1200);
@@ -27,7 +30,14 @@ public class WorkflowEditor extends JFrame {
         setVisible(true);
     }
 
+    public static WorkflowEditor getInstance() {
+        if (instance == null) {
+            instance = new WorkflowEditor();
+        }
+        return instance;
+    }
+
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new WorkflowEditor());
+        SwingUtilities.invokeLater(() -> WorkflowEditor.getInstance());
     }
 }

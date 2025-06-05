@@ -23,7 +23,7 @@ public class EditMenu extends JMenuBar {
         groupMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                groupAppleShapes(); // Call the correct method
+                groupAppleShapes();
             }
         });
 
@@ -31,7 +31,7 @@ public class EditMenu extends JMenuBar {
         ungroupMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ungroupSelectedShape(); // Call the ungroupSelectedShape method
+                ungroupSelectedShape();
             }
         });
 
